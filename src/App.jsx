@@ -14,6 +14,24 @@ export default function App() {
     }
   };
 
+  
+const applyBlur = () => {
+  if (!preview) return;
+  const img = new Image();
+  img.src = preview;
+  img.onload = () => {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = img.width;
+    canvas.height = img.height;
+    ctx.filter = "blur(8px)";
+    ctx.drawImage(img, 0, 0);
+    const blurredUrl = canvas.toDataURL("image/png");
+    setPreview(blurredUrl);
+  };
+};
+
+
   const downloadImage = () => {
     const link = document.createElement("a");
     link.href = preview;
@@ -36,6 +54,7 @@ export default function App() {
             <label className="cursor-pointer bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-xl flex items-center gap-2">
               <UploadCloud size={20} /> Upload Photo
               <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+            {preview && <button onClick={applyBlur} className="mt-4 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl">Apply Blur</button>}
             </label>
             {preview && (
               <img src={preview} alt="Preview" className="mt-4 rounded-xl shadow-md w-full" />
